@@ -4,8 +4,24 @@ import os
 from pydantic import BaseModel, Field, field_validator
 from postgrest.exceptions import APIError
 from datetime import datetime, timezone
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Allow requests from your Vercel frontend
+origins = [
+    "https://localization-management-frontend-kappa.vercel.app",
+    "http://localhost:3000",  # For local dev
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class LocalizationCreate(BaseModel):
     project_id: str = Field(..., min_length=1, max_length=20)
